@@ -1,9 +1,9 @@
 {
-  "name": "Demo Tracker",
-  "short_name": "DemoApp",
-  "start_url": "/?utm_source=home",
+  "name": "Demo Tracker App",
+  "short_name": "DemoTracker",
+  "start_url": "/?utm=home",
   "display": "standalone",
-  "theme_color": "#25D366",
+  "theme_color": "#075e54",
   "background_color": "#ffffff",
   "icons": [
     {
