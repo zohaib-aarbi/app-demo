@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Demo App</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DemoApp">
+    <style>
+        body { font-family: Arial; text-align: center; padding: 2rem; }
+        button { font-size: 1.5rem; padding: 1rem 2rem; background: #25D366; border: none; border-radius: 2rem; color: white; }
+    </style>
+</head>
+<body>
+    <h1 id="message">Loading...</h1>
+    <p>To install this app on your phone:</p>
+    <ul>
+        <li><strong>Android</strong>: Tap "Add to Home Screen" from browser menu</li>
+        <li><strong>iPhone/iPad</strong>: Tap Share icon → "Add to Home Screen"</li>
+    </ul>
+    <button onclick="simulateDownload()">✅ DOWNLOAD / INSTALL</button>
+    <p id="status"></p>
+
+    <script>
+        // Read which WhatsApp group sent the user
+        const urlParams = new URLSearchParams(window.location.search);
+        const group = urlParams.get('group') || 'unknown';
+        document.getElementById('message').innerHTML = `You came from <strong>WhatsApp Group ${group}</strong>`;
+
+        async function simulateDownload() {
+            document.getElementById('status').innerText = 'Logging your download...';
+            try {
+                // Replace THIS_URL with your Google Apps Script URL (Step 3)
+                await fetch('YOUR_APPS_SCRIPT_URL', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ group: group, timestamp: new Date().toISOString() })
+                });
+                document.getElementById('status').innerText = '✓ Download recorded! Now install the app using the instructions above.';
+            } catch(e) {
+                document.getElementById('status').innerText = 'Logging failed, but you can still install.';
+            }
+        }
+    </script>
+</body>
+</html>
