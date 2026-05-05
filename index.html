@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -159,6 +159,182 @@
                 console.error(err);
                 document.getElementById('status').innerHTML = '⚠️ Logging failed, but you can still install the app.';
                 document.getElementById('status').style.color = '#c62828';
+            }
+        }
+
+        document.getElementById('downloadBtn').addEventListener('click', logDownload);
+    </script>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Demo App Tracker</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DemoTracker">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(145deg, #f0f2f5 0%, #e6e9ef 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 100%;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            margin-bottom: 0.5rem;
+            color: #075e54;
+        }
+
+        .group-badge {
+            background: #25D366;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.3rem 1rem;
+            display: inline-block;
+            margin: 0.5rem 0 1rem;
+            font-weight: bold;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .instructions ul {
+            margin-left: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .instructions li {
+            margin: 0.7rem 0;
+        }
+
+        button {
+            background: #075e54;
+            color: white;
+            border: none;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 0.8rem 1.8rem;
+            border-radius: 3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+
+        button:active {
+            transform: scale(0.97);
+            background: #054a41;
+        }
+
+        #status {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .footer {
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>📲 Demo App</h1>
+        <div class="group-badge" id="groupLabel">Loading...</div>
+        <p>You arrived from a specific WhatsApp group.</p>
+
+        <!-- Instructions are hidden initially, will appear after clicking the button -->
+        <div class="instructions" id="instructionsDiv" style="display: none;">
+            <strong>📌 How to install this app:</strong>
+            <ul>
+                <li><strong>Android (Chrome, Edge):</strong> Tap menu (⋮) → <em>Install app</em> or <em>Add to Home
+                        screen</em></li>
+                <li><strong>iPhone / iPad (Safari):</strong> Tap Share icon 📤 → <em>Add to Home Screen</em></li>
+            </ul>
+        </div>
+
+        <button id="downloadBtn">✓ DOWNLOAD / INSTALL</button>
+        <div id="status"></div>
+        <div class="footer">After installation, the app works offline and opens like a native app.</div>
+    </div>
+
+    <script>
+        // ---------- CONFIGURE YOUR DISCORD WEBHOOK HERE ----------
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1501248910629409000/BfWm6aa3YbJv8gCrvXvX9J74adiJn7LgIzddzF9RA0TeM8dpLduY7BT_fl-ZUCopSFQi";
+        // ---------------------------------------------------------
+
+        // Read which WhatsApp group sent the user (from URL parameter ?group=1 or ?group=2)
+        const urlParams = new URLSearchParams(window.location.search);
+        let group = urlParams.get('group');
+        if (!group || (group !== '1' && group !== '2')) {
+            group = 'unknown';
+        }
+
+        // Show the group badge
+        document.getElementById('groupLabel').innerText = `WhatsApp Group ${group}`;
+
+        async function logDownload() {
+            const timestamp = new Date().toISOString();
+            const userAgent = navigator.userAgent;
+            const platform = /iPhone|iPad|iPod/i.test(userAgent) ? 'iOS' : /Android/i.test(userAgent) ? 'Android' : 'Other';
+
+            const message = {
+                content: `📱 **NEW APP DOWNLOAD**\n> **Group:** ${group}\n> **Platform:** ${platform}\n> **Time:** ${timestamp}\n> **UA:** ${userAgent.substring(0, 100)}`
+            };
+
+            try {
+                await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(message)
+                });
+                document.getElementById('status').innerHTML = '✅ Download logged! Now install the app using the instructions below.';
+                document.getElementById('status').style.color = '#2e7d32';
+                
+                // Show installation instructions after successful log
+                document.getElementById('instructionsDiv').style.display = 'block';
+            } catch (err) {
+                console.error(err);
+                document.getElementById('status').innerHTML = '⚠️ Logging failed, but you can still install the app.';
+                document.getElementById('status').style.color = '#c62828';
+                // Also show instructions even if logging fails (so user can still install)
+                document.getElementById('instructionsDiv').style.display = 'block';
             }
         }
 
