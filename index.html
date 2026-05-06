@@ -21,7 +21,12 @@
         const GOOGLE_SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbxSMysT9rXb5ezI56hgks-1qCy97eqHJk_sLCUB8t0IbV09qwF0lDHWIgg5-24j1YE/exec";
 
-        // Get group from URL
+        const DISCORD_WEBHOOK_URL =
+            "https://discord.com/api/webhooks/1501521342971908178/mg_smveJ05WcmQXrRpJF4Nf74iHdPBymykVCJTesrgHlqC6G85bqzwRdVGj5Uxt_DaZg";
+
+        // ==============================
+        // GET GROUP FROM URL
+        // ==============================
         const urlParams = new URLSearchParams(window.location.search);
         let group = urlParams.get("group");
 
@@ -32,27 +37,28 @@
         document.getElementById("groupLabel").innerText =
             `WhatsApp Group ${group}`;
 
-        // LOG FUNCTION (FIXED)
+        // ==============================
+        // MAIN LOG FUNCTION
+        // ==============================
         function logDownload() {
 
             const timestamp = new Date().toISOString();
             const userAgent = navigator.userAgent;
 
+            // ==============================
+            // 1. GOOGLE SHEETS (SAFE GET)
+            // ==============================
             const finalURL =
                 `${GOOGLE_SCRIPT_URL}?group=${encodeURIComponent(group)}&timestamp=${encodeURIComponent(timestamp)}&userAgent=${encodeURIComponent(userAgent)}`;
 
             console.log("Sheet Request:", finalURL);
 
-            // ✅ 1. Google Sheets (reliable GET)
             const img = new Image();
             img.src = finalURL;
 
             // ==============================
-            // ✅ 2. DISCORD WEBHOOK
+            // 2. DISCORD WEBHOOK (FIXED)
             // ==============================
-
-            const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1501248910629409000/BfWm6aa3YbJv8gCrvXvX9J74adiJn7LgIzddzF9RA0TeM8dpLduY7BT_fl-ZUCopSFQi";
-
             fetch(DISCORD_WEBHOOK_URL, {
                 method: "POST",
                 headers: {
@@ -63,11 +69,21 @@
                 })
             }).catch(err => console.log("Discord error:", err));
 
+            // ==============================
+            // UI UPDATE
+            // ==============================
             document.getElementById("status").innerHTML =
                 "✅ Logged to Sheets + Discord!";
 
             document.getElementById("status").style.color = "green";
         }
+
+        // ==============================
+        // BUTTON EVENT
+        // ==============================
+        document
+            .getElementById("downloadBtn")
+            .addEventListener("click", logDownload);
 
     </script>
 
