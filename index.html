@@ -13,32 +13,16 @@
 
     <div id="groupLabel">Loading...</div>
 
-    <button id="downloadBtn">
-        ✓ DOWNLOAD / INSTALL
-    </button>
+    <button id="downloadBtn">✓ DOWNLOAD / INSTALL</button>
 
     <div id="status"></div>
-    <!-- 
-    //            "https://script.google.com/macros/s/AKfycbxSMysT9rXb5ezI56hgks-1qCy97eqHJk_sLCUB8t0IbV09qwF0lDHWIgg5-24j1YE/exec"; -->
 
     <script>
-        // ===================================
-        // GOOGLE APPS SCRIPT DEPLOYED URL
-        // ===================================
-
         const GOOGLE_SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbxSMysT9rXb5ezI56hgks-1qCy97eqHJk_sLCUB8t0IbV09qwF0lDHWIgg5-24j1YE/exec";
 
-
-        // ===================================
-        // GET GROUP FROM URL
-        // Example:
-        // ?group=1
-        // ?group=2
-        // ===================================
-
+        // Get group from URL
         const urlParams = new URLSearchParams(window.location.search);
-
         let group = urlParams.get("group");
 
         if (!group || (group !== "1" && group !== "2")) {
@@ -48,42 +32,25 @@
         document.getElementById("groupLabel").innerText =
             `WhatsApp Group ${group}`;
 
+        // LOG FUNCTION (FIXED)
+        function logDownload() {
 
-        // ===================================
-        // BUTTON CLICK → SEND TO GOOGLE SHEET
-        // ===================================
-
-        async function logDownload() {
             const timestamp = new Date().toISOString();
             const userAgent = navigator.userAgent;
 
-            // Build URL with parameters
             const finalURL =
                 `${GOOGLE_SCRIPT_URL}?group=${encodeURIComponent(group)}&timestamp=${encodeURIComponent(timestamp)}&userAgent=${encodeURIComponent(userAgent)}`;
 
-            console.log(finalURL); // debug check
+            console.log("Request sent:", finalURL);
 
-            try {
-                const response = await fetch(finalURL);
+            // ✅ Reliable method (NO fetch, NO CORS issues)
+            const img = new Image();
+            img.src = finalURL;
 
-                const result = await response.text();
-                console.log(result);
+            document.getElementById("status").innerHTML =
+                "✅ Download logged successfully!";
 
-                document.getElementById("status").innerHTML =
-                    "✅ Download logged successfully!";
-
-                document.getElementById("status").style.color =
-                    "green";
-
-            } catch (error) {
-                console.error(error);
-
-                document.getElementById("status").innerHTML =
-                    "⚠️ Logging failed. Please try again.";
-
-                document.getElementById("status").style.color =
-                    "red";
-            }
+            document.getElementById("status").style.color = "green";
         }
 
         document
