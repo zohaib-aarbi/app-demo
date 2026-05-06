@@ -22,7 +22,7 @@
             "https://script.google.com/macros/s/AKfycbxSMysT9rXb5ezI56hgks-1qCy97eqHJk_sLCUB8t0IbV09qwF0lDHWIgg5-24j1YE/exec";
 
         const DISCORD_WEBHOOK_URL =
-            "https://discord.com/api/webhooks/1501521342971908178/mg_smveJ05WcmQXrRpJF4Nf74iHdPBymykVCJTesrgHlqC6G85bqzwRdVGj5Uxt_DaZg";
+            "https://discord.com/api/webhooks/1501248910629409000/BfWm6aa3Y3bJv8gCrvXvX9J74adiJn7LgIzddzF9RA0TeM8dpLduY7BT_fl-ZUCopSFQi";
 
         // ==============================
         // GET GROUP FROM URL
@@ -38,7 +38,7 @@
             `WhatsApp Group ${group}`;
 
         // ==============================
-        // MAIN LOG FUNCTION
+        // MAIN FUNCTION
         // ==============================
         function logDownload() {
 
@@ -46,18 +46,15 @@
             const userAgent = navigator.userAgent;
 
             // ==============================
-            // 1. GOOGLE SHEETS (SAFE GET)
+            // GOOGLE SHEETS (RELIABLE)
             // ==============================
             const finalURL =
                 `${GOOGLE_SCRIPT_URL}?group=${encodeURIComponent(group)}&timestamp=${encodeURIComponent(timestamp)}&userAgent=${encodeURIComponent(userAgent)}`;
 
-            console.log("Sheet Request:", finalURL);
-
-            const img = new Image();
-            img.src = finalURL;
+            new Image().src = finalURL;
 
             // ==============================
-            // 2. DISCORD WEBHOOK (FIXED)
+            // DISCORD WEBHOOK (SAFE VERSION)
             // ==============================
             fetch(DISCORD_WEBHOOK_URL, {
                 method: "POST",
@@ -67,7 +64,9 @@
                 body: JSON.stringify({
                     content: `📲 New Download\nGroup: ${group}\nTime: ${timestamp}\nDevice: ${userAgent}`
                 })
-            }).catch(err => console.log("Discord error:", err));
+            })
+            .then(res => console.log("Discord status:", res.status))
+            .catch(err => console.log("Discord error:", err));
 
             // ==============================
             // UI UPDATE
@@ -78,13 +77,9 @@
             document.getElementById("status").style.color = "green";
         }
 
-        // ==============================
-        // BUTTON EVENT
-        // ==============================
         document
             .getElementById("downloadBtn")
             .addEventListener("click", logDownload);
-
     </script>
 
 </body>
