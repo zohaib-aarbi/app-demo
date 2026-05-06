@@ -3,167 +3,37 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo App Tracker</title>
-
-    <link rel="manifest" href="manifest.json">
-
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="DemoTracker">
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(145deg, #f0f2f5 0%, #e6e9ef 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 2rem;
-            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
-            max-width: 500px;
-            width: 100%;
-            padding: 2rem 1.5rem;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 1.9rem;
-            margin-bottom: 0.5rem;
-            color: #075e54;
-        }
-
-        .group-badge {
-            background: #25D366;
-            color: white;
-            border-radius: 2rem;
-            padding: 0.3rem 1rem;
-            display: inline-block;
-            margin: 0.5rem 0 1rem;
-            font-weight: bold;
-        }
-
-        .instructions {
-            background: #f8f9fa;
-            border-radius: 1rem;
-            padding: 1rem;
-            margin: 1.5rem 0;
-            text-align: left;
-            display: none;
-        }
-
-        .instructions ul {
-            margin-left: 1.2rem;
-            margin-top: 0.5rem;
-        }
-
-        .instructions li {
-            margin: 0.7rem 0;
-        }
-
-        button {
-            background: #075e54;
-            color: white;
-            border: none;
-            font-size: 1.3rem;
-            font-weight: bold;
-            padding: 0.8rem 1.8rem;
-            border-radius: 3rem;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-            margin: 0.5rem 0;
-        }
-
-        button:active {
-            transform: scale(0.97);
-            background: #054a41;
-        }
-
-        #status {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: #2c3e50;
-            font-weight: 500;
-        }
-
-        .footer {
-            font-size: 0.75rem;
-            color: #7f8c8d;
-            margin-top: 1.5rem;
-        }
-    </style>
 </head>
 
 <body>
 
-    <div class="card">
+    <h1>📲 Demo App</h1>
 
-        <h1>📲 Demo App</h1>
+    <div id="groupLabel">Loading...</div>
 
-        <div class="group-badge" id="groupLabel">
-            Loading...
-        </div>
+    <button id="downloadBtn">
+        ✓ DOWNLOAD / INSTALL
+    </button>
 
-        <p>You arrived from a specific WhatsApp group.</p>
-
-        <div class="instructions" id="instructionsDiv">
-            <strong>📌 How to install this app:</strong>
-
-            <ul>
-                <li>
-                    <strong>Android (Chrome, Edge):</strong>
-                    Tap menu (⋮) → Install app
-                    or Add to Home screen
-                </li>
-
-                <li>
-                    <strong>iPhone / iPad (Safari):</strong>
-                    Tap Share icon 📤 →
-                    Add to Home Screen
-                </li>
-            </ul>
-        </div>
-
-        <button id="downloadBtn">
-            ✓ DOWNLOAD / INSTALL
-        </button>
-
-        <div id="status"></div>
-
-        <div class="footer">
-            After installation, the app works offline and opens like a native app.
-        </div>
-
-    </div>
+    <div id="status"></div>
 
     <script>
-        // =========================
-        // GOOGLE APPS SCRIPT URL
-        // =========================
+        // ===================================
+        // GOOGLE APPS SCRIPT DEPLOYED URL
+        // ===================================
 
         const GOOGLE_SCRIPT_URL =
-            "https://script.google.com/macros/s/AKfycbzlo3Z-7ioFLRPhVsKdrAGpcjlnJMwr2OYVR4VN49pN1RsMOa6J3vZGt3Feep_9qh4cmg/exec";
+            "https://script.google.com/macros/s/AKfycbxSMysT9rXb5ezI56hgks-1qCy97eqHJk_sLCUB8t0IbV09qwF0lDHWIgg5-24j1YE/exec";
 
 
-        // =========================
+        // ===================================
         // GET GROUP FROM URL
         // Example:
         // ?group=1
         // ?group=2
-        // =========================
+        // ===================================
 
         const urlParams = new URLSearchParams(window.location.search);
 
@@ -176,15 +46,20 @@
         document.getElementById("groupLabel").innerText =
             `WhatsApp Group ${group}`;
 
-        // =========================
-        // DOWNLOAD BUTTON CLICK
-        // =========================
+
+        // ===================================
+        // BUTTON CLICK → SEND TO GOOGLE SHEET
+        // ===================================
 
         async function logDownload() {
             const timestamp = new Date().toISOString();
             const userAgent = navigator.userAgent;
 
             try {
+                // IMPORTANT:
+                // NO headers: Content-Type JSON
+                // because Apps Script often fails with it
+
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
                     body: JSON.stringify({
@@ -195,10 +70,10 @@
                 });
 
                 document.getElementById("status").innerHTML =
-                    "✅ Download logged successfully! Install instructions are shown below.";
+                    "✅ Download logged successfully!";
 
                 document.getElementById("status").style.color =
-                    "#2e7d32";
+                    "green";
 
             } catch (error) {
                 console.error(error);
@@ -207,27 +82,14 @@
                     "⚠️ Logging failed. Please try again.";
 
                 document.getElementById("status").style.color =
-                    "#c62828";
+                    "red";
             }
-
-            document.getElementById("instructionsDiv").style.display =
-                "block";
         }
 
         document
             .getElementById("downloadBtn")
             .addEventListener("click", logDownload);
 
-        // =========================
-        // SERVICE WORKER
-        // =========================
-
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker
-                .register("sw.js")
-                .then(() => console.log("Service Worker Registered"))
-                .catch(err => console.log(err));
-        }
     </script>
 
 </body>
