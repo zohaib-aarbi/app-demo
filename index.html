@@ -155,7 +155,7 @@
         // =========================
 
         const GOOGLE_SCRIPT_URL =
-            "https://script.google.com/macros/s/AKfycbyJudim8jQFA21BXM4x2C2TgsW3-XFY7jPphTvSpt9G_-YlOo-nK5jzrf1icQ3XBm6_zg/exec";
+            "https://script.google.com/macros/s/AKfycbzX9XpsWbrBsxWpFYsOrz8jk4NPBY90ezDj3zcnbO7-gYO9Uvjc9vHx0j4CrBA66P6v/exec";
 
         // =========================
         // GET GROUP FROM URL
@@ -186,11 +186,15 @@
             try {
                 await fetch(GOOGLE_SCRIPT_URL, {
                     method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                     body: JSON.stringify({
                         group: group,
                         timestamp: timestamp,
                         userAgent: userAgent
                     })
+
                 });
 
                 document.getElementById("status").innerHTML =
