@@ -18,6 +18,8 @@
     </button>
 
     <div id="status"></div>
+    <!-- 
+    //            "https://script.google.com/macros/s/AKfycbxSMysT9rXb5ezI56hgks-1qCy97eqHJk_sLCUB8t0IbV09qwF0lDHWIgg5-24j1YE/exec"; -->
 
     <script>
         // ===================================
@@ -55,19 +57,17 @@
             const timestamp = new Date().toISOString();
             const userAgent = navigator.userAgent;
 
-            try {
-                // IMPORTANT:
-                // NO headers: Content-Type JSON
-                // because Apps Script often fails with it
+            // Build URL with parameters
+            const finalURL =
+                `${GOOGLE_SCRIPT_URL}?group=${encodeURIComponent(group)}&timestamp=${encodeURIComponent(timestamp)}&userAgent=${encodeURIComponent(userAgent)}`;
 
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: "POST",
-                    body: JSON.stringify({
-                        group: group,
-                        timestamp: timestamp,
-                        userAgent: userAgent
-                    })
-                });
+            console.log(finalURL); // debug check
+
+            try {
+                const response = await fetch(finalURL);
+
+                const result = await response.text();
+                console.log(result);
 
                 document.getElementById("status").innerHTML =
                     "✅ Download logged successfully!";
