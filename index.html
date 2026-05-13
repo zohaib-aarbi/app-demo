@@ -5,23 +5,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo App Tracker</title>
-    <!-- Paste this right before your closing </head> tag -->
+
+    <!-- MIXPANEL -->
     <script type="text/javascript">
         (function (e, c) {
             if (!c.__SV) {
-                var l, h; window.mixpanel = c; c._i = []; c.init = function (q, r, f) {
-                    function t(d, a) { var g = a.split("."); 2 == g.length && (d = d[g[0]], a = g[1]); d[a] = function () { d.push([a].concat(Array.prototype.slice.call(arguments, 0))) } } var b = c; "undefined" !== typeof f ? b = c[f] = [] : f = "mixpanel"; b.people = b.people || []; b.toString = function (d) { var a = "mixpanel"; "mixpanel" !== f && (a += "." + f); d || (a += " (stub)"); return a }; b.people.toString = function () { return b.toString(1) + ".people (stub)" }; l = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
-                    for (h = 0; h < l.length; h++)t(b, l[h]); var n = "set set_once union unset remove delete".split(" "); b.get_group = function () { function d(p) { a[p] = function () { b.push([g, [p].concat(Array.prototype.slice.call(arguments, 0))]) } } for (var a = {}, g = ["get_group"].concat(Array.prototype.slice.call(arguments, 0)), m = 0; m < n.length; m++)d(n[m]); return a }; c._i.push([q, r, f])
-                }; c.__SV = 1.2; var k = e.createElement("script"); k.type = "text/javascript"; k.async = !0; k.src = "undefined" !== typeof MIXPANEL_CUSTOM_LIB_URL ? MIXPANEL_CUSTOM_LIB_URL : "file:" ===
-                    e.location.protocol && "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//) ? "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js" : "//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js"; e = e.getElementsByTagName("script")[0]; e.parentNode.insertBefore(k, e)
+                var l, h;
+                window.mixpanel = c;
+                c._i = [];
+
+                c.init = function (q, r, f) {
+                    function t(d, a) {
+                        var g = a.split(".");
+                        if (g.length == 2) {
+                            d = d[g[0]];
+                            a = g[1];
+                        }
+
+                        d[a] = function () {
+                            d.push([a].concat(Array.prototype.slice.call(arguments, 0)));
+                        };
+                    }
+
+                    var b = c;
+
+                    if (typeof f !== "undefined") {
+                        b = c[f] = [];
+                    } else {
+                        f = "mixpanel";
+                    }
+
+                    b.people = b.people || [];
+
+                    b.toString = function (d) {
+                        var a = "mixpanel";
+
+                        if (f !== "mixpanel") {
+                            a += "." + f;
+                        }
+
+                        if (!d) {
+                            a += " (stub)";
+                        }
+
+                        return a;
+                    };
+
+                    b.people.toString = function () {
+                        return b.toString(1) + ".people (stub)";
+                    };
+
+                    l = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+
+                    for (h = 0; h < l.length; h++) {
+                        t(b, l[h]);
+                    }
+
+                    c._i.push([q, r, f]);
+                };
+
+                c.__SV = 1.2;
+
+                var k = e.createElement("script");
+                k.type = "text/javascript";
+                k.async = true;
+                k.src = "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
+
+                var s = e.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(k, s);
             }
-        })(document, window.mixpanel || [])
+        })(document, window.mixpanel || []);
 
-        mixpanel.init('4e8d9a66138b594b51835054fa67fba8', {
+        // ==============================
+        // INIT MIXPANEL
+        // ==============================
+        mixpanel.init("4e8d9a66138b594b51835054fa67fba8", {
             autocapture: true,
-            record_sessions_percent: 100,
-        })
-
+            record_sessions_percent: 100
+        });
     </script>
 </head>
 
@@ -31,47 +92,98 @@
 
     <div id="groupLabel">Loading...</div>
 
-    <button id="downloadBtn">✓ DOWNLOAD / INSTALL</button>
+    <button id="downloadBtn">
+        ✓ DOWNLOAD / INSTALL
+    </button>
 
     <div id="status"></div>
 
     <script>
+
+        // ==============================
+        // CONFIG
+        // ==============================
         const GOOGLE_SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbxSMysT9rXb5ezI56hgks-1qCy97eqHJk_sLCUB8t0IbV09qwF0lDHWIgg5-24j1YE/exec";
 
         const DISCORD_WEBHOOK_URL =
-            "https://discord.com/api/webhooks/1501248910629409000/BfWm6aa3Y3bJv8gCrvXvX9J74adiJn7LgIzddzF9RA0TeM8dpLduY7BT_fl-ZUCopSFQi";
+            "YOUR_DISCORD_WEBHOOK";
 
         // ==============================
         // GET GROUP FROM URL
+        // Example:
+        // ?group=1
         // ==============================
         const urlParams = new URLSearchParams(window.location.search);
+
         let group = urlParams.get("group");
 
         if (!group || (group !== "1" && group !== "2")) {
             group = "unknown";
         }
 
+        // ==============================
+        // UPDATE UI
+        // ==============================
         document.getElementById("groupLabel").innerText =
             `WhatsApp Group ${group}`;
 
         // ==============================
-        // MAIN FUNCTION
+        // CREATE USER ID
+        // ==============================
+        let userId = localStorage.getItem("user_id");
+
+        if (!userId) {
+            userId = crypto.randomUUID();
+            localStorage.setItem("user_id", userId);
+        }
+
+        // ==============================
+        // IDENTIFY USER
+        // ==============================
+        mixpanel.identify(userId);
+
+        // ==============================
+        // SET USER PROPERTIES
+        // ==============================
+        mixpanel.people.set_once({
+            first_seen: new Date().toISOString()
+        });
+
+        mixpanel.people.set({
+            whatsapp_group: group,
+            browser_language: navigator.language,
+            device_platform: navigator.platform
+        });
+
+        // ==============================
+        // MAIN DOWNLOAD FUNCTION
         // ==============================
         function logDownload() {
 
-            // Pakistan Time (UTC+5)
             const now = new Date();
 
             const pakistanTime = new Date(
-                now.toLocaleString("en-US", { timeZone: "Asia/Karachi" })
+                now.toLocaleString("en-US", {
+                    timeZone: "Asia/Karachi"
+                })
             );
 
             const timestamp = pakistanTime.toISOString();
+
             const userAgent = navigator.userAgent;
 
             // ==============================
-            // GOOGLE SHEETS (RELIABLE)
+            // MIXPANEL EVENT
+            // ==============================
+            mixpanel.track("Download Clicked", {
+                whatsapp_group: group,
+                timestamp: timestamp,
+                device: userAgent
+            });
+
+            // ==============================
+            // GOOGLE SHEETS
             // ==============================
             const finalURL =
                 `${GOOGLE_SCRIPT_URL}?group=${encodeURIComponent(group)}&timestamp=${encodeURIComponent(timestamp)}&userAgent=${encodeURIComponent(userAgent)}`;
@@ -79,7 +191,7 @@
             new Image().src = finalURL;
 
             // ==============================
-            // DISCORD WEBHOOK (SAFE VERSION)
+            // DISCORD WEBHOOK
             // ==============================
             fetch(DISCORD_WEBHOOK_URL, {
                 method: "POST",
@@ -87,24 +199,32 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    content: `📲 New Download\nGroup: ${group}\nTime: ${timestamp} (Pakistan Time UTC+5)\nDevice: ${userAgent}`
+                    content:
+                        `📲 New Download\n` +
+                        `Group: ${group}\n` +
+                        `Time: ${timestamp}\n` +
+                        `Device: ${userAgent}`
                 })
             })
                 .then(res => console.log("Discord status:", res.status))
                 .catch(err => console.log("Discord error:", err));
 
             // ==============================
-            // UI UPDATE
+            // UI STATUS
             // ==============================
             document.getElementById("status").innerHTML =
-                "✅ Logged to Sheets + Discord!";
+                "✅ Logged to Mixpanel + Sheets + Discord!";
 
             document.getElementById("status").style.color = "green";
         }
 
+        // ==============================
+        // BUTTON EVENT
+        // ==============================
         document
             .getElementById("downloadBtn")
             .addEventListener("click", logDownload);
+
     </script>
 
 </body>
