@@ -60,7 +60,14 @@
         // ==============================
         function logDownload() {
 
-            const timestamp = new Date().toISOString();
+            // Pakistan Time (UTC+5)
+            const now = new Date();
+
+            const pakistanTime = new Date(
+                now.toLocaleString("en-US", { timeZone: "Asia/Karachi" })
+            );
+
+            const timestamp = pakistanTime.toISOString();
             const userAgent = navigator.userAgent;
 
             // ==============================
@@ -80,7 +87,7 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    content: `📲 New Download\nGroup: ${group}\nTime: ${timestamp}\nDevice: ${userAgent}`
+                    content: `📲 New Download\nGroup: ${group}\nTime: ${timestamp} (Pakistan Time UTC+5)\nDevice: ${userAgent}`
                 })
             })
                 .then(res => console.log("Discord status:", res.status))
