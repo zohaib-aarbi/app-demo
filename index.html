@@ -2,95 +2,132 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo App Tracker</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mixpanel Funnel Demo</title>
 
     <!-- MIXPANEL -->
     <script type="text/javascript">
-        (function (e, c) {
-            if (!c.__SV) {
-                var l, h;
-                window.mixpanel = c;
-                c._i = [];
+        (function (f, b) {
+            if (!b.__SV) {
+                var a, e, i, g;
+                window.mixpanel = b;
+                b._i = [];
 
-                c.init = function (q, r, f) {
-                    function t(d, a) {
-                        var g = a.split(".");
-                        if (g.length == 2) {
-                            d = d[g[0]];
-                            a = g[1];
+                b.init = function (a, e, d) {
+
+                    function f(b, h) {
+                        var a = h.split(".");
+                        if (a.length == 2) {
+                            b = b[a[0]];
+                            h = a[1];
                         }
 
-                        d[a] = function () {
-                            d.push([a].concat(Array.prototype.slice.call(arguments, 0)));
+                        b[h] = function () {
+                            b.push([h].concat(Array.prototype.slice.call(arguments, 0)));
                         };
                     }
 
-                    var b = c;
+                    var c = b;
 
-                    if (typeof f !== "undefined") {
-                        b = c[f] = [];
+                    if (typeof d !== "undefined") {
+                        c = b[d] = [];
                     } else {
-                        f = "mixpanel";
+                        d = "mixpanel";
                     }
 
-                    b.people = b.people || [];
+                    c.people = c.people || [];
 
-                    b.toString = function (d) {
+                    c.toString = function (b) {
                         var a = "mixpanel";
-
-                        if (f !== "mixpanel") {
-                            a += "." + f;
+                        if (d !== "mixpanel") {
+                            a += "." + d;
                         }
-
-                        if (!d) {
+                        if (!b) {
                             a += " (stub)";
                         }
-
                         return a;
                     };
 
-                    b.people.toString = function () {
-                        return b.toString(1) + ".people (stub)";
+                    c.people.toString = function () {
+                        return c.toString(1) + ".people (stub)";
                     };
 
-                    l = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
+                    i = "disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders start_session_recording stop_session_recording people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");
 
-                    for (h = 0; h < l.length; h++) {
-                        t(b, l[h]);
+                    for (g = 0; g < i.length; g++) {
+                        f(c, i[g]);
                     }
 
-                    c._i.push([q, r, f]);
+                    b._i.push([a, e, d]);
                 };
 
-                c.__SV = 1.2;
+                b.__SV = 1.2;
 
-                var k = e.createElement("script");
-                k.type = "text/javascript";
-                k.async = true;
-                k.src = "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
+                a = f.createElement("script");
+                a.type = "text/javascript";
+                a.async = true;
+                a.src = "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
 
-                var s = e.getElementsByTagName("script")[0];
-                s.parentNode.insertBefore(k, s);
+                e = f.getElementsByTagName("script")[0];
+                e.parentNode.insertBefore(a, e);
             }
         })(document, window.mixpanel || []);
 
         // ==============================
-        // INIT MIXPANEL
+        // INITIALIZE MIXPANEL
         // ==============================
         mixpanel.init("4e8d9a66138b594b51835054fa67fba8", {
             autocapture: true,
             record_sessions_percent: 100
         });
     </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            text-align: center;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #groupLabel {
+            margin: 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 14px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>📲 Demo App</h1>
+    <h1>📲 Mixpanel Funnel Demo</h1>
 
-    <div id="groupLabel">Loading...</div>
+    <div id="groupLabel">Loading group...</div>
 
     <button id="downloadBtn">
         ✓ DOWNLOAD / INSTALL
@@ -101,18 +138,15 @@
     <script>
 
         // ==============================
-        // CONFIG
+        // GOOGLE SHEETS URL
         // ==============================
         const GOOGLE_SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbxSMysT9rXb5ezI56hgks-1qCy97eqHJk_sLCUB8t0IbV09qwF0lDHWIgg5-24j1YE/exec";
 
-        const DISCORD_WEBHOOK_URL =
-            "YOUR_DISCORD_WEBHOOK";
-
         // ==============================
         // GET GROUP FROM URL
         // Example:
-        // ?group=1
+        // index.html?group=1
         // ==============================
         const urlParams = new URLSearchParams(window.location.search);
 
@@ -127,30 +161,22 @@
         // ==============================
         document.getElementById("groupLabel").innerText =
             `WhatsApp Group ${group}`;
-        // BUTTON VIEWED EVENT
-        mixpanel.track("Button Viewed", {
-            button_name: "Download Button",
-            whatsapp_group: group
-        });
+
         // ==============================
-        // CREATE USER ID
+        // CREATE UNIQUE USER ID
         // ==============================
-        let userId = localStorage.getItem("user_id");
+        let userId = localStorage.getItem("mixpanel_user_id");
 
         if (!userId) {
             userId = crypto.randomUUID();
-            localStorage.setItem("user_id", userId);
+            localStorage.setItem("mixpanel_user_id", userId);
         }
 
         // ==============================
         // IDENTIFY USER
         // ==============================
         mixpanel.identify(userId);
-        // PAGE VISIT EVENT
-        mixpanel.track("Page Visited", {
-            whatsapp_group: group,
-            page: "Demo App Landing Page"
-        });
+
         // ==============================
         // SET USER PROPERTIES
         // ==============================
@@ -165,7 +191,23 @@
         });
 
         // ==============================
-        // MAIN DOWNLOAD FUNCTION
+        // TRACK PAGE VISIT EVENT
+        // ==============================
+        mixpanel.track("Page Visited", {
+            whatsapp_group: group,
+            page_name: "Demo Landing Page"
+        });
+
+        // ==============================
+        // TRACK BUTTON VIEW EVENT
+        // ==============================
+        mixpanel.track("Button Viewed", {
+            whatsapp_group: group,
+            button_name: "Download Button"
+        });
+
+        // ==============================
+        // DOWNLOAD BUTTON FUNCTION
         // ==============================
         function logDownload() {
 
@@ -187,11 +229,12 @@
             mixpanel.track("Download Clicked", {
                 whatsapp_group: group,
                 timestamp: timestamp,
-                device: userAgent
+                device: userAgent,
+                button_location: "Main Landing Page"
             });
 
             // ==============================
-            // GOOGLE SHEETS
+            // GOOGLE SHEETS LOGGING
             // ==============================
             const finalURL =
                 `${GOOGLE_SCRIPT_URL}?group=${encodeURIComponent(group)}&timestamp=${encodeURIComponent(timestamp)}&userAgent=${encodeURIComponent(userAgent)}`;
@@ -199,35 +242,16 @@
             new Image().src = finalURL;
 
             // ==============================
-            // DISCORD WEBHOOK
-            // ==============================
-            fetch(DISCORD_WEBHOOK_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    content:
-                        `📲 New Download\n` +
-                        `Group: ${group}\n` +
-                        `Time: ${timestamp}\n` +
-                        `Device: ${userAgent}`
-                })
-            })
-                .then(res => console.log("Discord status:", res.status))
-                .catch(err => console.log("Discord error:", err));
-
-            // ==============================
-            // UI STATUS
+            // UPDATE UI STATUS
             // ==============================
             document.getElementById("status").innerHTML =
-                "✅ Logged to Mixpanel + Sheets + Discord!";
+                "✅ Logged to Mixpanel & Google Sheets!";
 
             document.getElementById("status").style.color = "green";
         }
 
         // ==============================
-        // BUTTON EVENT
+        // BUTTON CLICK EVENT
         // ==============================
         document
             .getElementById("downloadBtn")
