@@ -127,7 +127,11 @@
         // ==============================
         document.getElementById("groupLabel").innerText =
             `WhatsApp Group ${group}`;
-
+        // BUTTON VIEWED EVENT
+        mixpanel.track("Button Viewed", {
+            button_name: "Download Button",
+            whatsapp_group: group
+        });
         // ==============================
         // CREATE USER ID
         // ==============================
@@ -142,7 +146,11 @@
         // IDENTIFY USER
         // ==============================
         mixpanel.identify(userId);
-
+        // PAGE VISIT EVENT
+        mixpanel.track("Page Visited", {
+            whatsapp_group: group,
+            page: "Demo App Landing Page"
+        });
         // ==============================
         // SET USER PROPERTIES
         // ==============================
